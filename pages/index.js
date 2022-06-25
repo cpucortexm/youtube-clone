@@ -6,14 +6,27 @@ import Heading from 'components/Heading'
 import LoadMore from 'components/LoadMore'
 import { useState } from 'react'
 import { amount } from 'lib/config'
+import { useRouter } from 'next/router'
+import { useSession } from 'next-auth/react'
 
 export default function Home({ initialVideos }) {
+  const { data: session, status } = useSession()
+  const router = useRouter()
   const [videos, setVideos] = useState(initialVideos)
   //create a reachedEnd state variable and we use it to conditionally 
   //show the LoadMore component. This gets updated in LoadMore.js
   // make sure this also happens initially, so if we only have 1 video we
   //  don’t show “load more”:
   const [reachedEnd, setReachedEnd] = useState(initialVideos.length <= amount)
+  const loading = status === 'loading'
+
+  if (loading) {
+    return null
+  }
+
+  if (session && !session.user.name) {
+    router.push('/setup')
+  }
   return (
     <div>
         <Head>
