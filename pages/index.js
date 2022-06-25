@@ -3,8 +3,17 @@ import { getVideos } from 'lib/data.js'
 import prisma from 'lib/prisma'
 import Videos from 'components/Videos'
 import Heading from 'components/Heading'
+import LoadMore from 'components/LoadMore'
+import { useState } from 'react'
+import { amount } from 'lib/config'
 
-export default function Home({ videos }) {
+export default function Home({ initialVideos }) {
+  const [videos, setVideos] = useState(initialVideos)
+  //create a reachedEnd state variable and we use it to conditionally 
+  //show the LoadMore component. This gets updated in LoadMore.js
+  // make sure this also happens initially, so if we only have 1 video we
+  //  don’t show “load more”:
+  const [reachedEnd, setReachedEnd] = useState(initialVideos.length <= amount)
   return (
     <div>
         <Head>
@@ -19,7 +28,15 @@ export default function Home({ videos }) {
           <p className='flex justify-center mt-20'>No videos found!</p>
         )}
       <Videos videos={videos} />
-
+      {/* To know where are we in the list? we pass the list of videos to LoadMore */}
+      {/* When we reach the end of the list we want the Load more button to disappear*/}
+      {!reachedEnd && (
+        <LoadMore 
+            videos={videos}
+            setVideos={setVideos}
+            setReachedEnd ={setReachedEnd}
+            />
+      )}
     </div>
   )
 }
@@ -31,7 +48,7 @@ export async function getServerSideProps() {
 
   return {
     props: {
-      videos,
+     initialVideos: videos,
     },
   }
 }
