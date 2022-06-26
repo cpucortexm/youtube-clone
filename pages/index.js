@@ -17,7 +17,7 @@ export default function Home({ initialVideos }) {
   //show the LoadMore component. This gets updated in LoadMore.js
   // make sure this also happens initially, so if we only have 1 video we
   //  don’t show “load more”:
-  const [reachedEnd, setReachedEnd] = useState(initialVideos.length <= amount)
+  const [reachedEnd, setReachedEnd] = useState(initialVideos.length < amount)
   const loading = status === 'loading'
 
   if (loading) {

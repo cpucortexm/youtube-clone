@@ -6,12 +6,17 @@ const onClickLoadMore = async (
                                 videos, 
                                 setVideos, 
                                 setReachedEnd, 
-                                author) =>{
+                                author,
+                                subscriptions) =>{
     // see skip param is passed
     const url = `/api/videos?skip=${videos.length}`
 
     if (author) { // also pass the author information
         url += `&author=${author.id}`
+    }
+
+    if (subscriptions) {
+      url += `&subscriptions=${subscriptions}`
     }
     const res = await fetch(url)
     const data = await res.json() // we get the videos data after fetch
@@ -32,7 +37,8 @@ export default function LoadMore({
                                 videos,
                                 setVideos, 
                                 setReachedEnd, 
-                                author})
+                                author,
+                                subscriptions})
 {
   return (
     <div className='flex justify-center'>
@@ -42,7 +48,8 @@ export default function LoadMore({
                                        videos,
                                        setVideos, 
                                        setReachedEnd, 
-                                       author)}
+                                       author,
+                                       subscriptions,)}
       >
         Load more
       </button>
